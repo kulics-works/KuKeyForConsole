@@ -1,13 +1,15 @@
 ﻿using Sharprompt;
 using System;
+using System.Threading.Tasks;
 
 namespace KuKeyForConsole
 {
     class entry
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var MainKey = Prompt.Password("Please input master password");
+            await KuKeyExample.ExampleAsync(MainKey);
             var behavior = Prompt.Select("What do you want to do?", new[] { "View key", "Add key", "Modify key", "Delete key" });
             switch (behavior)
             {
