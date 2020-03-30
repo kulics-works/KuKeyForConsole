@@ -14,10 +14,6 @@ namespace KuKeyForConsole
 {
     class KeyService
     {
-        static void PrintKey(KeyModel item)
-        {
-            print("ID:", item.Id, " Name:", item.Name, " Password:", item.Password);
-        }
         public static async Task CreateKeyAsync(DefaultKuKey Core)
         {
             var Name = Prompt.Input<string>("Please enter the Name") ?? "";
@@ -30,19 +26,34 @@ namespace KuKeyForConsole
         }
         public static async Task DeleteKey(DefaultKuKey Core)
         {
-
+            var want = Prompt.Input<string>("Please enter the name of the key you want to delete");
+            var selectedKey = await Query(want, Core);
+            await Core.Create(new DeleteRecordModel(selectedKey.Id));
+            await Core.Delete<KeyModel>(selectedKey.Id);
+            print("successfully deleted");
         }
         public static async Task QueryKey(DefaultKuKey Core)
         {
 
             var want = Prompt.Input<string>("Please enter the name of the key you want to find");
-            var keys = await Core.QueryAll<KeyModel>(i => i.Name.ToLower().Contains(want.ToLower()));
-            var selectedKey = Prompt.Select("Please select a key", keys, valueSelector : i => i.Name);
-            print($"Key: {selectedKey.Name}\nAccount: {selectedKey.Account}\nPassword: {selectedKey.Password}");
+            var selectedKey = await Query(want, Core);
+            print($"Key: {selectedKey.Name}\nAccount: {selectedKey.Account}\nPassword: {selectedKey.Password}\nURL: {selectedKey.URL}\nNote: {selectedKey.Note}");
         }
         public static async Task UpdateKey(DefaultKuKey Core)
         {
-
+            var want = Prompt.Input<string>("Please enter the name of the key you want to update");
+            var selectedKey = await Query(want, Core);
+            selectedKey.Name = Prompt.Input<string>("Please enter new Name, if you do not modify this item, press enter") ?? selectedKey.Name;
+            selectedKey.Account = Prompt.Input<string>("Please enter new Account, if you do not modify this item, press enter") ?? selectedKey.Account;
+            selectedKey.Password = Prompt.Input<string>("Please enter new Password, if you do not modify this item, press enter") ?? selectedKey.Password;
+            selectedKey.URL = Prompt.Input<string>("Please enter new URL, if you do not modify this item, press enter") ?? selectedKey.URL;
+            selectedKey.Note = Prompt.Input<string>("Please enter new Note, if you do not modify this item, press enter") ?? selectedKey.Note;
+            await Core.Update(selectedKey);
+        }
+        protected static async Task<KeyModel> Query(string want, DefaultKuKey Core)
+        {
+            var keys = await Core.QueryAll<KeyModel>(i => i.Name.ToLower().Contains(want.ToLower()));
+            return Prompt.Select("Please select a key", keys, valueSelector: i => i.Name);
         }
     }
 }
