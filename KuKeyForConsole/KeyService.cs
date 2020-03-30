@@ -38,6 +38,7 @@ namespace KuKeyForConsole
             var want = Prompt.Input<string>("Please enter the name of the key you want to find");
             var selectedKey = await Query(want, Core);
             print($"Key: {selectedKey.Name}\nAccount: {selectedKey.Account}\nPassword: {selectedKey.Password}\nURL: {selectedKey.URL}\nNote: {selectedKey.Note}");
+            read();
         }
         public static async Task UpdateKey(DefaultKuKey Core)
         {
