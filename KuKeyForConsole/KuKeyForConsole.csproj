@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +17,7 @@
       <HintPath>..\..\KuKey\bin\Debug\netstandard2.1\KuKey.dll</HintPath>
     </Reference>
     <Reference Include="Library">
-      <HintPath>..\..\k-csharp\Library\bin\Release\netstandard2.1\Library.dll</HintPath>
+      <HintPath>..\..\dll\Library.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
