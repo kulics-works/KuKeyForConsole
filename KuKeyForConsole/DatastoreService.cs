@@ -1,8 +1,6 @@
 ﻿using Kulics.KuKey.Core;
 using Sharprompt;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -64,7 +62,6 @@ namespace KuKeyForConsole
         }
         public static async Task Export(DefaultKuKey Core)
         {
-            //TODO: 安卓/IOS不识别
             string os = "";
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {

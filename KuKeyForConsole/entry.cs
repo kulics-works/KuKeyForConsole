@@ -18,16 +18,16 @@ namespace KuKeyForConsole
             switch (behavior)
             {
                 case "View key":
-                    KeyService.QueryKey(MainKey);
+                    await KeyService.QueryKey(Core);
                     break;
                 case "Add key":
-                    KeyService.CreateKey(MainKey);
+                    await KeyService.CreateKeyAsync(Core);
                     break;
                 case "Modify key":
-                    KeyService.UpdateKey(MainKey);
+                    await KeyService.UpdateKey(Core);
                     break;
                 case "Delete key":
-                    KeyService.DeleteKey(MainKey);
+                    await KeyService.DeleteKey(Core);
                     break;
                 case "Import":
                     await DatastoreService.Import(Core);
