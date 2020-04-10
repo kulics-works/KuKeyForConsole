@@ -1,10 +1,6 @@
 ﻿using Kulics.KuKey.Core;
-using Kulics.KuKey.Models;
-using Kulics.KuKey.Services;
 using Sharprompt;
-using System;
 using System.Threading.Tasks;
-using static Library.Lib;
 
 namespace KuKeyForConsole
 {
@@ -21,7 +17,7 @@ namespace KuKeyForConsole
                     await KeyService.QueryKey(Core);
                     break;
                 case "Add key":
-                    await KeyService.CreateKeyAsync(Core);
+                    await KeyService.CreateKey(Core);
                     break;
                 case "Modify key":
                     await KeyService.UpdateKey(Core);
