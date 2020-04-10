@@ -1,20 +1,16 @@
 ﻿using Kulics.KuKey.Core;
 using Kulics.KuKey.Models;
-using Kulics.KuKey.Services;
-using Library;
 using Sharprompt;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using static Library.Lib;
+using System.Linq;
 
 
 namespace KuKeyForConsole
 {
     class KeyService
     {
-        public static async Task CreateKeyAsync(DefaultKuKey Core)
+        public static async Task CreateKey(DefaultKuKey Core)
         {
             var Name = Prompt.Input<string>("Please enter the Name") ?? "";
             var Account = Prompt.Input<string>("Please enter the Account") ?? "";
@@ -30,15 +26,15 @@ namespace KuKeyForConsole
             var selectedKey = await Query(want, Core);
             await Core.Create(new DeleteRecordModel(selectedKey.Id));
             await Core.Delete<KeyModel>(selectedKey.Id);
-            print("successfully deleted");
+            Console.WriteLine("successfully deleted");
         }
         public static async Task QueryKey(DefaultKuKey Core)
         {
 
             var want = Prompt.Input<string>("Please enter the name of the key you want to find");
             var selectedKey = await Query(want, Core);
-            print($"Key: {selectedKey.Name}\nAccount: {selectedKey.Account}\nPassword: {selectedKey.Password}\nURL: {selectedKey.URL}\nNote: {selectedKey.Note}");
-            read();
+            Console.WriteLine($"Key: {selectedKey.Name}\nAccount: {selectedKey.Account}\nPassword: {selectedKey.Password}\nURL: {selectedKey.URL}\nNote: {selectedKey.Note}");
+            Console.ReadKey();
         }
         public static async Task UpdateKey(DefaultKuKey Core)
         {
@@ -53,8 +49,14 @@ namespace KuKeyForConsole
         }
         protected static async Task<KeyModel> Query(string want, DefaultKuKey Core)
         {
-            var keys = await Core.QueryAll<KeyModel>(i => i.Name.ToLower().Contains(want.ToLower()));
-            return Prompt.Select("Please select a key", keys, valueSelector: i => i.Name);
+            return Core.LINQ(i => {
+                var origins = (from originItem in i.Set<KeyModel>()
+                               select i.Decrypt(originItem)).ToList();
+                return Prompt.Select("Please select a key",
+                       (from item in origins
+                        where item.b && item.r.Name.ToLower().Contains(want.ToLower())
+                        select item.r).ToList(), valueSelector: i => i.Name);
+            });
         }
     }
 }
