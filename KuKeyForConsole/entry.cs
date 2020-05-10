@@ -1,6 +1,7 @@
 ﻿using Kulics.KuKey.Core;
 using Sharprompt;
 using System.Threading.Tasks;
+using System;
 
 namespace KuKeyForConsole
 {
@@ -32,6 +33,7 @@ namespace KuKeyForConsole
                     await DatastoreService.Export(Core);
                     break;
             }
+            Console.ReadKey();
         }
     }
 }
