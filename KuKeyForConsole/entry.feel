@@ -1,0 +1,32 @@
+<- KuKeyForConsole
+
+-> {
+    Kulics.KuKey.Core
+    Sharprompt
+    System.Threading.Tasks
+    System
+    System.IO
+}
+
+Main : (->>) {
+    MainKey : Prompt.Password("Please input master password")
+    Core : DefaultKuKey("./kukey.sql", MainKey)
+    behavior : Prompt.Select("What do you want to do?", array_of( "View key", "Add key", "Modify key", "Delete key", "Import", "Export" ))
+    ? behavior : "View key" {
+        KeyService.QueryKey ~> (Core)
+    } "Add key" {
+        KeyService.CreateKey ~> (Core)
+    } "Modify key" {
+        KeyService.UpdateKey ~> (Core)
+    } "Delete key" {
+        KeyService.DeleteKey ~> (Core)
+    } "Import" {
+        DatastoreService.Import ~> (Core)
+    } "Export" {
+        DatastoreService.Export ~> (Core)
+    }
+    read()
+}
+
+
+##DefaultKuKey
