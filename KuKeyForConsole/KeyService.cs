@@ -26,7 +26,7 @@ namespace KuKeyForConsole
             var selectedKey = await Query(want, Core);
             await Core.SaveAsync(async ctx =>
             {
-                ctx.Create(new DeleteRecordModel(selectedKey.Id));
+                // ctx.Create(new DeleteRecordModel(selectedKey.Id));
                 ctx.Delete<KeyModel>(selectedKey.Id);
             });
             Console.WriteLine("successfully deleted");
