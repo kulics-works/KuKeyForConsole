@@ -11,15 +11,16 @@
 Main : (->>) {
     MainKey : Prompt.Password("Please input master password")
     Core : DefaultKuKey("./kukey.sql", MainKey)
+    KeySvc :KeyService {}
     behavior : Prompt.Select("What do you want to do?", array_of( "View key", "Add key", "Modify key", "Delete key", "Import", "Export" ))
     ? behavior : "View key" {
-        KeyService.QueryKey ~> (Core)
+        KeySvc.QueryKey ~> (Core)
     } "Add key" {
-        KeyService.CreateKey ~> (Core)
+        KeySvc.CreateKey ~> (Core)
     } "Modify key" {
-        KeyService.UpdateKey ~> (Core)
+        KeySvc.UpdateKey ~> (Core)
     } "Delete key" {
-        KeyService.DeleteKey ~> (Core)
+        KeySvc.DeleteKey ~> (Core)
     } "Import" {
         DatastoreService.Import ~> (Core)
     } "Export" {
