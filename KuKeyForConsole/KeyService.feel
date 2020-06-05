@@ -29,27 +29,33 @@ KeyService :$ {
     DeleteKey : ( Core DefaultKuKey->> ) {
         want : Prompt.[Input str]("Please enter the name of the key you want to delete")
         selectedKey : Query ~> (want, Core)
-        Core.SaveAsync ~> {
-            ctx ->> ctx.[Delete KeyModel](selectedKey.Id)
+        ? selectedKey >< nil {
+            Core.SaveAsync ~> {
+                ctx ->> ctx.[Delete KeyModel](selectedKey.Id)
+            }
+            print("successfully deleted")
         }
-        print("successfully deleted")
     }
 
     QueryKey : ( Core DefaultKuKey->> ) {
         want : Prompt.[Input str]("Please enter the name of the key you want to find")
         selectedKey : Query ~> (want, Core)
-        print("Key: ${selectedKey.Name}\nAccount: ${selectedKey.Account}\nPassword: ${selectedKey.Password}\nURL: ${selectedKey.URL}\nNote: ${selectedKey.Note}")
+        ? selectedKey >< nil {
+            print("Key: ${selectedKey.Name}\nAccount: ${selectedKey.Account}\nPassword: ${selectedKey.Password}\nURL: ${selectedKey.URL}\nNote: ${selectedKey.Note}")
+        }
     }
 
     UpdateKey : ( Core DefaultKuKey->> ) {
         want : Prompt.[Input str]("Please enter the name of the key you want to update")
         selectedKey : Query ~> (want, Core)
-        selectedKey.Name = Prompt.[Input str]("Please enter new Name, if you do not modify this item, press enter") ?? selectedKey.Name;
-        selectedKey.Account = Prompt.[Input str]("Please enter new Account, if you do not modify this item, press enter") ?? selectedKey.Account;
-        selectedKey.Password = Prompt.[Input str]("Please enter new Password, if you do not modify this item, press enter") ?? selectedKey.Password;
-        selectedKey.URL = Prompt.[Input str]("Please enter new URL, if you do not modify this item, press enter") ?? selectedKey.URL;
-        selectedKey.Note = Prompt.[Input str]("Please enter new Note, if you do not modify this item, press enter") ?? selectedKey.Note;
-        Core.SaveAsync ~> {ctx ->> ctx.Update(selectedKey)}
+        ? selectedKey >< nil {
+            selectedKey.Name = Prompt.[Input str]("Please enter new Name, if you do not modify this item, press enter") ?? selectedKey.Name;
+            selectedKey.Account = Prompt.[Input str]("Please enter new Account, if you do not modify this item, press enter") ?? selectedKey.Account;
+            selectedKey.Password = Prompt.[Input str]("Please enter new Password, if you do not modify this item, press enter") ?? selectedKey.Password;
+            selectedKey.URL = Prompt.[Input str]("Please enter new URL, if you do not modify this item, press enter") ?? selectedKey.URL;
+            selectedKey.Note = Prompt.[Input str]("Please enter new Note, if you do not modify this item, press enter") ?? selectedKey.Note;
+            Core.SaveAsync ~> {ctx ->> ctx.Update(selectedKey)}
+        }
     }
 
     Query : (want str, Core DefaultKuKey ->> result KeyModel){
@@ -58,10 +64,17 @@ KeyService :$ {
             i ->> 
                 origins : (@ originItem : i.[Set KeyModel]() ->
                 select i.Decrypt(originItem)).ToList()
-                result = Prompt.Select("Please select a key",
-                (@ item : origins ->
-                where item.b & item.r.Name.ToLower().Contains(want.ToLower()) ->
-                select item.r).ToList(), nil, 10 , {i -> i.Name}  ) 
+                items : [list Kulics.KuKey.Models.KeyModel]{}
+                @ item : origins {
+                    ? item.b & item.r.Name.ToLower().Contains(want.ToLower()){
+                        items += item.r
+                    }
+                }
+                ? len(items) == 0{
+                    print("NO KEYS")
+                    <-
+                }
+                result = Prompt.Select("Please select a key", items, nil, 10 , {i -> i.Name})
         }
         <- result
     }
