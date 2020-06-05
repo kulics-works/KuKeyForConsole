@@ -13,6 +13,7 @@ public static  async System.Threading.Tasks.Task Main(){
 var MainKey = Prompt.Password("Please input master password");
 var Core = (new DefaultKuKey("./kukey.sql", MainKey));
 var KeySvc = (new KeyService());
+var DataSvc = (new DatastoreService());
 var behavior = Prompt.Select("What do you want to do?", array_of("View key", "Add key", "Modify key", "Delete key", "Import", "Export"));
 switch (behavior) {
 case "View key" :
@@ -28,10 +29,10 @@ case "Delete key" :
 { await KeySvc.DeleteKey(Core);
 } break;
 case "Import" :
-{ await DatastoreService.Import(Core);
+{ await DataSvc.Import(Core);
 } break;
 case "Export" :
-{ await DatastoreService.Export(Core);
+{ await DataSvc.Export(Core);
 } break;
 }
 read();
