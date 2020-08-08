@@ -18,18 +18,17 @@ DatastoreService := $ {
         Core.Import~>(text)
     }
 
-    ReadFile := (filePath: str -> Text: str){
-        ? File.Exists(filePath) == false {
+    ReadFile := (filePath: str -> text: str) {
+        File.Exists(filePath) == false ? {
             print("file not found")
             <- ""
         } _ {
             -> fsRead := FileStream(filePath, FileMode.Open) {
                 ! {
-                    FSLength := fsRead.Length: int!
+                    FSLength := fsRead.Length!: int
                     ByteBlock := [array u8](FSLength)
                     r := fsRead.Read(ByteBlock, 0, ByteBlock.Length)
-                    Text := Encoding.UTF8.GetString(ByteBlock)
-                    <- Text
+                    <- Encoding.UTF8.GetString(ByteBlock)
                 } err {
                     print(err)
                     <- ""
@@ -40,11 +39,11 @@ DatastoreService := $ {
 
     Export := (Core: DefaultKuKey ->> ){
         os := ""
-        ? RuntimeInformation.IsOSPlatform(OSPlatform.Linux) {
+        RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? {
             os = "Linux"
-        } RuntimeInformation.IsOSPlatform(OSPlatform.OSX) {
+        } RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? {
             os = "mac OS"
-        } RuntimeInformation.IsOSPlatform(OSPlatform.Windows) {
+        } RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? {
             os = "windows"
         }
         time := DateTime.Now.ToString("yyyy-MM-dd")

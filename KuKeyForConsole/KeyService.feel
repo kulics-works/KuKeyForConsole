@@ -29,7 +29,7 @@ KeyService := $ {
     DeleteKey := (Core: DefaultKuKey->> ) {
         want := Prompt.[Input str]("Please enter the name of the key you want to delete")
         selectedKey := Query~>(want, Core)
-        ? selectedKey >< nil {
+        selectedKey >< nil ? {
             Core.SaveAsync~>{ ctx ->>
                 ctx.[Delete KeyModel](selectedKey.Id)
             }
@@ -40,7 +40,7 @@ KeyService := $ {
     QueryKey := (Core: DefaultKuKey->> ) {
         want := Prompt.[Input str]("Please enter the name of the key you want to find")
         selectedKey := Query~>(want, Core)
-        ? selectedKey >< nil {
+        selectedKey >< nil ? {
             print("Key: ${selectedKey.Name}\nAccount: ${selectedKey.Account}\nPassword: ${selectedKey.Password}\nURL: ${selectedKey.URL}\nNote: ${selectedKey.Note}")
         }
     }
@@ -48,7 +48,7 @@ KeyService := $ {
     UpdateKey := (Core: DefaultKuKey->> ) {
         want := Prompt.[Input str]("Please enter the name of the key you want to update")
         selectedKey := Query~>(want, Core)
-        ? selectedKey >< nil {
+        selectedKey >< nil ? {
             selectedKey.Name = Prompt.[Input str]("Please enter new Name, if you do not modify this item, press enter") ?? selectedKey.Name
             selectedKey.Account = Prompt.[Input str]("Please enter new Account, if you do not modify this item, press enter") ?? selectedKey.Account
             selectedKey.Password = Prompt.[Input str]("Please enter new Password, if you do not modify this item, press enter") ?? selectedKey.Password
@@ -64,12 +64,12 @@ KeyService := $ {
             origins := (@ originItem := i.[Set KeyModel]() ->
             select i.Decrypt(originItem)).ToList()
             items := [list Kulics.KuKey.Models.KeyModel]{}
-            @ item := origins {
-                ? item.b & item.r.Name.ToLower().Contains(want.ToLower()) {
+            origins @ item {
+                item.b & item.r.Name.ToLower().Contains(want.ToLower()) ? {
                     items += item.r
                 }
             }
-            ? len(items) == 0 {
+            len(items) == 0 ? {
                 print("NO KEYS")
                 <-
             }

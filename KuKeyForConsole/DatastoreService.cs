@@ -28,8 +28,7 @@ try {
 var FSLength = (int)(fsRead.Length);
 var ByteBlock = array<byte>(FSLength);
 var r = fsRead.Read(ByteBlock, 0, ByteBlock.Length);
-var Text = Encoding.UTF8.GetString(ByteBlock);
-return Text;
+return Encoding.UTF8.GetString(ByteBlock);
 }catch( Exception err )
 {
 print(err);
