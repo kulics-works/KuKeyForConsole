@@ -1,6 +1,6 @@
 using Library;
 using static Library.Lib;
-using Kulics.KuKey.Core;
+using KuKey.Core;
 using Sharprompt;
 using System.Threading.Tasks;
 using System;

@@ -1,8 +1,8 @@
 <- KuKeyForConsole
 
 -> {
-    Kulics.KuKey.Core
-    Kulics.KuKey.Models
+    KuKey.Core
+    KuKey.Models
     Sharprompt
     System
     System.Threading.Tasks
@@ -63,7 +63,7 @@ KeyService := $ {
         Core.QueryAsync~>{ i ->> 
             origins := (@ originItem := i.[Set KeyModel]() ->
             select i.Decrypt(originItem)).ToList()
-            items := [list Kulics.KuKey.Models.KeyModel]{}
+            items := [list KuKey.Models.KeyModel]{}
             origins @ item {
                 item.b & item.r.Name.ToLower().Contains(want.ToLower()) ? {
                     items += item.r

@@ -1,7 +1,7 @@
 using Library;
 using static Library.Lib;
-using Kulics.KuKey.Core;
-using Kulics.KuKey.Models;
+using KuKey.Core;
+using KuKey.Models;
 using Sharprompt;
 using System;
 using System.Threading.Tasks;
@@ -49,7 +49,7 @@ await Core.SaveAsync( async (ctx)=>ctx.Update(selectedKey));
 public  async  virtual  System.Threading.Tasks.Task<KeyModel> Query( string want ,  DefaultKuKey Core ){
 KeyModel result = null;
 await Core.QueryAsync( async (i)=>{var origins = (from originItem in i.Set<KeyModel>() select i.Decrypt(originItem)).ToList();
-var items = (new list<Kulics.KuKey.Models.KeyModel>());
+var items = (new list<KuKey.Models.KeyModel>());
 foreach (var item in origins){
 if ( item.b&&item.r.Name.ToLower().Contains(want.ToLower()) ) {
 items+=item.r;

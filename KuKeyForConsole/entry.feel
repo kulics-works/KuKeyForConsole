@@ -1,7 +1,7 @@
 <- KuKeyForConsole
 
 -> {
-    Kulics.KuKey.Core
+    KuKey.Core
     Sharprompt
     System.Threading.Tasks
     System
