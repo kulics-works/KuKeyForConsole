@@ -12,7 +12,7 @@
 
 DatastoreService := $ {
     Import := (Core: DefaultKuKey ->> ) {
-        filePath := Prompt.[Input str]("Please enter the path of the source data")
+        filePath := Prompt.Input str("Please enter the path of the source data")
         text := ReadFile(filePath)
         print(text)
         Core.Import~>(text)
@@ -26,7 +26,7 @@ DatastoreService := $ {
             -> fsRead := FileStream(filePath, FileMode.Open) {
                 ! {
                     FSLength := fsRead.Length!: int
-                    ByteBlock := [array u8](FSLength)
+                    ByteBlock := array u8(FSLength)
                     r := fsRead.Read(ByteBlock, 0, ByteBlock.Length)
                     <- Encoding.UTF8.GetString(ByteBlock)
                 } err {
