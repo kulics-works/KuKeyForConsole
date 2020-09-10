@@ -23,7 +23,7 @@ public  async  virtual  System.Threading.Tasks.Task DeleteKey( DefaultKuKey Core
 var want = Prompt.Input<string>("Please enter the name of the key you want to delete");
 var selectedKey = await Query(want, Core);
 if ( selectedKey!=null ) {
-await Core.SaveAsync( async (ctx)=>ctx.Delete<KeyModel>(selectedKey.Id));
+await Core.SaveAsync( async (ctx)=>ctx.Delete(selectedKey));
 print("successfully deleted");
 }
 }
@@ -49,7 +49,7 @@ await Core.SaveAsync( async (ctx)=>ctx.Update(selectedKey));
 public  async  virtual  System.Threading.Tasks.Task<KeyModel> Query( string want ,  DefaultKuKey Core ){
 KeyModel result = null;
 await Core.QueryAsync( async (i)=>{var origins = (from originItem in i.Set<KeyModel>() select i.Decrypt(originItem)).ToList();
-var items = (new list<KuKey.Models.KeyModel>());
+var items = (new list<KeyModel>());
 foreach (var item in origins){
 if ( item.b&&item.r.Name.ToLower().Contains(want.ToLower()) ) {
 items+=item.r;
@@ -59,7 +59,7 @@ if ( len(items)==0 ) {
 print("NO KEYS");
 return;
 }
-result=Prompt.Select("Please select a key", items, null, 10, (i)=>i.Name);
+result = Prompt.Select("Please select a key", items, null, 10, (i)=>i.Name);
 });
 return result;
 }

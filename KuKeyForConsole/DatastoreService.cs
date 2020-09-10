@@ -39,13 +39,13 @@ return "";
 public  async  virtual  System.Threading.Tasks.Task Export( DefaultKuKey Core ){
 var os = "";
 if ( RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ) {
-os="Linux";
+os = "Linux";
 }
 else if ( RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ) {
-os="mac OS";
+os = "mac OS";
 }
 else if ( RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ) {
-os="windows";
+os = "windows";
 }
 var time = DateTime.Now.ToString("yyyy-MM-dd");
 var export = await Core.Export();

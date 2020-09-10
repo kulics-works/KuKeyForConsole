@@ -10,26 +10,26 @@
     System.Threading.Tasks
 }
 
-DatastoreService := $ {
-    Import := (Core: DefaultKuKey ->> ) {
-        filePath := Prompt.Input str("Please enter the path of the source data")
-        text := ReadFile(filePath)
+DatastoreService = $ {
+    Import = (Core: DefaultKuKey ->> ) {
+        filePath = Prompt.Input`str("Please enter the path of the source data")
+        text = ReadFile(filePath)
         print(text)
         Core.Import~>(text)
     }
 
-    ReadFile := (filePath: str -> text: str) {
+    ReadFile = (filePath: str -> text: str) {
         File.Exists(filePath) == false ? {
             print("file not found")
             <- ""
-        } _ {
-            -> fsRead := FileStream(filePath, FileMode.Open) {
+        } | _ {
+            -> fsRead = FileStream(filePath, FileMode.Open) {
                 ! {
-                    FSLength := fsRead.Length!: int
-                    ByteBlock := array u8(FSLength)
-                    r := fsRead.Read(ByteBlock, 0, ByteBlock.Length)
+                    FSLength = fsRead.Length!: int
+                    ByteBlock = array`u8(FSLength)
+                    r = fsRead.Read(ByteBlock, 0, ByteBlock.Length)
                     <- Encoding.UTF8.GetString(ByteBlock)
-                } err {
+                } & err {
                     print(err)
                     <- ""
                 }
@@ -37,24 +37,24 @@ DatastoreService := $ {
         }
     }
 
-    Export := (Core: DefaultKuKey ->> ){
-        os := ""
+    Export = (Core: DefaultKuKey ->> ){
+        os = ""
         RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? {
             os = "Linux"
-        } RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? {
+        } | RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? {
             os = "mac OS"
-        } RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? {
+        } | RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? {
             os = "windows"
         }
-        time := DateTime.Now.ToString("yyyy-MM-dd")
-        export := Core.Export~>()
-        filePath := "kukey-" + os + "-" + time + ".txt"
+        time = DateTime.Now.ToString("yyyy-MM-dd")
+        export = Core.Export~>()
+        filePath = "kukey-" + os + "-" + time + ".txt"
         WriteTextAsync(filePath, export)
     }
 
-    WriteTextAsync := (filePath: str, text: str -> ) {
-        ByteResult := Encoding.UTF8.GetBytes(text.to_str())
-        -> fsWrite := FileStream(filePath, FileMode.Create) {
+    WriteTextAsync = (filePath: str, text: str -> ) {
+        ByteResult = Encoding.UTF8.GetBytes(text.to_str())
+        -> fsWrite = FileStream(filePath, FileMode.Create) {
             fsWrite.Write(ByteResult, 0, ByteResult.Length)
         }
     }
