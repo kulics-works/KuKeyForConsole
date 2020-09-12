@@ -23,16 +23,16 @@ KeyService = $ {
             URL = URL
             Note = Note 
         }
-        Core.SaveAsync~>{ctx ->> ctx.Create(key)}
+        Core.SaveAsync~>((ctx>){ctx.Create(key)})
     }
 
     DeleteKey = (Core: DefaultKuKey->> ) {
         want = Prompt.Input`str("Please enter the name of the key you want to delete")
         selectedKey = Query~>(want, Core)
         selectedKey >< nil ? {
-            Core.SaveAsync~>{ ctx ->>
+            Core.SaveAsync~>( (ctx>) {
                 ctx.Delete(selectedKey)
-            }
+            })
             print("successfully deleted")
         }
     }
@@ -54,13 +54,13 @@ KeyService = $ {
             selectedKey.Password = Prompt.Input`str("Please enter new Password, if you do not modify this item, press enter") ?? selectedKey.Password
             selectedKey.URL = Prompt.Input`str("Please enter new URL, if you do not modify this item, press enter") ?? selectedKey.URL
             selectedKey.Note = Prompt.Input`str("Please enter new Note, if you do not modify this item, press enter") ?? selectedKey.Note
-            Core.SaveAsync~>{ctx ->> ctx.Update(selectedKey)}
+            Core.SaveAsync~>((ctx>){ctx.Update(selectedKey)})
         }
     }
 
     Query = (want: str, Core: DefaultKuKey ->> result: KeyModel) {
         !result: KeyModel = nil
-        Core.QueryAsync~>{ i ->> 
+        Core.QueryAsync~>( (i>) { 
             origins = (@ originItem = i.Set`KeyModel() ->
             select i.Decrypt(originItem)).ToList()
             items = list`KeyModel{}
@@ -73,8 +73,8 @@ KeyService = $ {
                 print("NO KEYS")
                 <-
             }
-            result = Prompt.Select("Please select a key", items, nil, 10 , {i -> i.Name})
-        }
+            result = Prompt.Select("Please select a key", items, nil, 10 , (i){i.Name})
+        })
         <- result
     }
 }
