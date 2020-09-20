@@ -41,10 +41,10 @@ var os = "";
 if ( RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ) {
 os = "Linux";
 }
-else if ( RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ) {
+ else if ( RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ) {
 os = "mac OS";
 }
-else if ( RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ) {
+ else if ( RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ) {
 os = "windows";
 }
 var time = DateTime.Now.ToString("yyyy-MM-dd");
