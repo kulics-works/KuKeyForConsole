@@ -14,19 +14,24 @@ Main = (->>) {
     KeySvc = KeyService{}
     DataSvc = DatastoreService{}
     behavior = Prompt.Select("What do you want to do?", array_of( "View key", "Add key", "Modify key", "Delete key", "Import", "Export" ))
-    behavior == {
-        | "View key" ?
-            KeySvc.QueryKey~>(Core)
-        | "Add key" ?
-            KeySvc.CreateKey~>(Core)
-        | "Modify key" ?
-            KeySvc.UpdateKey~>(Core)
-        | "Delete key" ?
-            KeySvc.DeleteKey~>(Core)
-        | "Import" ?
-            DataSvc.Import~>(Core)
-        | "Export" ?
-            DataSvc.Export~>(Core)
+    behavior == 
+    | "View key" ? {
+        KeySvc.QueryKey~>(Core)
+    }
+    | "Add key" ? {
+        KeySvc.CreateKey~>(Core)
+    }
+    | "Modify key" ? {
+        KeySvc.UpdateKey~>(Core)
+    }
+    | "Delete key" ? {
+        KeySvc.DeleteKey~>(Core)
+    }
+    | "Import" ? {
+        DataSvc.Import~>(Core)
+    }
+    | "Export" ? {
+        DataSvc.Export~>(Core)
     }
     read()
 }
